@@ -16,8 +16,6 @@ jobs:
       - name: Restore artifacts, or setup vcpkg (do not install any package)
         uses: lukka/run-vcpkg@v7
         with:
-          # Just install vcpkg for now, do not install any ports in this step yet.
-          setupOnly: true
           # Location of the vcpkg submodule in the Git repository.
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
