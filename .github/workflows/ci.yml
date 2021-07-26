@@ -1,9 +1,8 @@
 on: [push, pull_request]
 jobs:
-  windows:
+  build:
     runs-on: windows-latest
     name: Windows
-  build:
     env:
       buildDir: '${{ github.workspace }}/build/'
     steps:
