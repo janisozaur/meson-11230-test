@@ -1,11 +1,11 @@
 on: [push, pull_request]
-jobs: 
+jobs:
+  runs-on: windows-latest
   build:
     env:
       buildDir: '${{ github.workspace }}/build/'
     steps:
       #-uses: actions/cache@v1   <===== YOU DO NOT NEED THIS!
-      
       # Install latest CMake.
       - uses: lukka/get-cmake@latest
 
