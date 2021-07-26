@@ -6,7 +6,9 @@ jobs:
     env:
       buildDir: '${{ github.workspace }}/build/'
     steps:
-      #-uses: actions/cache@v1   <===== YOU DO NOT NEED THIS!
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
       # Install latest CMake.
       - uses: lukka/get-cmake@latest
 
