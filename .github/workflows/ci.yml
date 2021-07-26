@@ -1,16 +1,24 @@
-name: CI
-on: [push, pull_request]
-jobs:
-  windows:
-    name: Windows
-    runs-on: windows-latest
+jobs: 
+  build:
+    env:
+      buildDir: '${{ github.workspace }}/build/'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install vcpkg and packages
+      #-uses: actions/cache@v1   <===== YOU DO NOT NEED THIS!
+      
+      # Install latest CMake.
+      - uses: lukka/get-cmake@latest
+
+      # Restore from cache the previously built ports. If a "cache miss" occurs, then vcpkg is bootstrapped. Since a the vcpkg.json is being used later on to install the packages when run-cmake runs, no packages are installed at this time and the input 'setupOnly:true' is mandatory.
+      - name: Restore artifacts, or setup vcpkg (do not install any package)
         uses: lukka/run-vcpkg@v7
-        id: runvcpkg
         with:
-          vcpkgGitCommitId: d781bd9ca77ac3dc2f13d88169021d48459c665f
+          # Just install vcpkg for now, do not install any ports in this step yet.
+          setupOnly: true
+          # Location of the vcpkg submodule in the Git repository.
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
+          # compute its hash and append this to the computed cache's key.
+          appendedCacheKey: ${{ hashFiles( '**/vcpkg_manifest/vcpkg.json' ) }}
           vcpkgTriplet: 'arm64-windows'
-          vcpkgArguments: 'tomlplusplus'
+          # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed' directory.
+          additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
